@@ -26,7 +26,8 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFailure() {
-
+                //fail
+                Log.d(TAG, "onCreate: onFailure");
             }
 
             @Override
