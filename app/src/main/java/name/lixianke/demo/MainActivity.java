@@ -26,8 +26,6 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFailure() {
-                //fail
-                Log.d(TAG, "onCreate: onFailure");
                 Log.d(TAG, "onCreate: FileManager scanAll onFailure");
             }
 
