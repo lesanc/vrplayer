@@ -34,7 +34,9 @@ public class FileManager implements ScanFileCallback {
 
     @Override
     public void onFailure() {
-
+        if (mCallback != null){
+            mCallback.onFailure();
+        }
     }
 
     @Override
@@ -47,6 +49,11 @@ public class FileManager implements ScanFileCallback {
     }
 
     public void scan(final File rootFile){
+        if (rootFile == null){
+            onFailure();
+            return;
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
