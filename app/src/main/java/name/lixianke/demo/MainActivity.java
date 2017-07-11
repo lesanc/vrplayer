@@ -7,6 +7,9 @@ import android.util.Log;
 
 import java.io.File;
 
+import name.lixianke.vrplayer.FileManager;
+import name.lixianke.vrplayer.ScanFileCallback;
+
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
 
@@ -14,7 +17,23 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        File root = Environment.getExternalStorageDirectory();
-        Log.d(TAG, "onCreate: " + root.getAbsolutePath());
+        FileManager fm = FileManager.getInstance();
+        fm.setCallback(new ScanFileCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "onCreate: FileManager scanAll onSuccess");
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+
+            @Override
+            public void onAbort() {
+
+            }
+        });
+        fm.scanAll();
     }
 }
