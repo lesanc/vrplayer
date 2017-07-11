@@ -47,11 +47,11 @@ public class FileManager implements ScanFileCallback {
 
     }
 
-    public void scan(String rootPath){
-        scan(new File(rootPath));
+    public void scan(String rootPath, final Filter filter){
+        scan(new File(rootPath), filter);
     }
 
-    public void scan(final File rootFile){
+    public void scan(final File rootFile, final Filter filter){
         if (rootFile == null || !rootFile.exists()){
             onFailure();
             return;
@@ -60,19 +60,23 @@ public class FileManager implements ScanFileCallback {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                FileInfo fileInfo = doScan(rootFile);
+                FileInfo fileInfo = doScan(rootFile, filter);
                 onSuccess(fileInfo.getFileList());
             }
         }).start();
     }
 
     public void scanAll(){
-        File root = Environment.getExternalStorageDirectory();
-        scan(root);
+        scanAll(null);
     }
 
-    private FileInfo doScan(File file){
-        if (file == null || !file.exists()){
+    public void scanAll(Filter filter){
+        File root = Environment.getExternalStorageDirectory();
+        scan(root, filter);
+    }
+
+    private FileInfo doScan(File file, Filter filter){
+        if (file == null || !file.exists() || file.isHidden()){
             return null;
         }
 
@@ -81,24 +85,28 @@ public class FileManager implements ScanFileCallback {
         fileInfo.setPath(file.getAbsolutePath());
 
         if (file.isFile()){
+            if (filter != null && !filter.rule(fileInfo)){
+                return null;
+            }
             fileInfo.setFolder(false);
             return fileInfo;
         } else if (file.isDirectory()) {
             fileInfo.setFolder(true);
             File[] files = file.listFiles();
-            if (files == null || files.length == 0){
-                return fileInfo;
-            }
+            if (files != null) {
+                List<FileInfo> list = new ArrayList<>();
+                for (int i = 0; i < files.length; i++) {
+                    FileInfo info = doScan(files[i], filter);
+                    if (info != null) {
+                        list.add(info);
+                    }
+                }
 
-            List<FileInfo> list = new ArrayList<>();
-            for (int i = 0; i < files.length; i++){
-                FileInfo info = doScan(files[i]);
-                if (info != null){
-                    list.add(info);
+                if (list.size() > 0) {
+                    fileInfo.setFileList(list);
+                    return fileInfo;
                 }
             }
-            fileInfo.setFileList(list);
-            return fileInfo;
         }
 
         return null;

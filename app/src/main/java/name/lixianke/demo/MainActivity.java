@@ -9,6 +9,7 @@ import java.util.List;
 import name.lixianke.vrplayer.FileInfo;
 import name.lixianke.vrplayer.FileManager;
 import name.lixianke.vrplayer.ScanFileCallback;
+import name.lixianke.vrplayer.VideoFilter;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
@@ -37,6 +38,6 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "onCreate: FileManager scanAll onAbort");
             }
         });
-        fm.scanAll();
+        fm.scanAll(new VideoFilter());
     }
 }
