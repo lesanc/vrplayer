@@ -26,12 +26,12 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFailure() {
-
+                Log.d(TAG, "onCreate: FileManager scanAll onFailure");
             }
 
             @Override
             public void onAbort() {
-
+                Log.d(TAG, "onCreate: FileManager scanAll onAbort");
             }
         });
         fm.scanAll();
