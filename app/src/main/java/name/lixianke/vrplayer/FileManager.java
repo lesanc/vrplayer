@@ -98,6 +98,7 @@ public class FileManager implements ScanFileCallback {
                 for (int i = 0; i < files.length; i++) {
                     FileInfo info = doScan(files[i], filter);
                     if (info != null) {
+                        info.setParent(fileInfo);
                         list.add(info);
                     }
                 }

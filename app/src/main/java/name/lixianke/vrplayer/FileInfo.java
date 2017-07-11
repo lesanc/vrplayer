@@ -11,6 +11,7 @@ public class FileInfo implements Serializable {
     private String name;
     private String path;
     private boolean isFolder;
+    private FileInfo parent;
     private List<FileInfo> fileList;
 
     public String getName() {
@@ -35,6 +36,14 @@ public class FileInfo implements Serializable {
 
     public void setFolder(boolean folder) {
         isFolder = folder;
+    }
+
+    public FileInfo getParent() {
+        return parent;
+    }
+
+    public void setParent(FileInfo parent) {
+        this.parent = parent;
     }
 
     public List<FileInfo> getFileList() {
