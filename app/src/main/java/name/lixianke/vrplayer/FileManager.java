@@ -3,12 +3,15 @@ package name.lixianke.vrplayer;
 import android.os.Environment;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lixianke on 2017/7/11.
  */
 
 public class FileManager implements ScanFileCallback {
+    private static final String TAG = "FileManager";
     public static FileManager instance = new FileManager();
 
     public static FileManager getInstance(){
@@ -26,9 +29,9 @@ public class FileManager implements ScanFileCallback {
     }
 
     @Override
-    public void onSuccess() {
+    public void onSuccess(List<FileInfo> fileList) {
         if (mCallback != null){
-            mCallback.onSuccess();
+            mCallback.onSuccess(fileList);
         }
     }
 
@@ -49,7 +52,7 @@ public class FileManager implements ScanFileCallback {
     }
 
     public void scan(final File rootFile){
-        if (rootFile == null){
+        if (rootFile == null || !rootFile.exists()){
             onFailure();
             return;
         }
@@ -57,7 +60,8 @@ public class FileManager implements ScanFileCallback {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                onSuccess();
+                FileInfo fileInfo = doScan(rootFile);
+                onSuccess(fileInfo.getFileList());
             }
         }).start();
     }
@@ -67,5 +71,36 @@ public class FileManager implements ScanFileCallback {
         scan(root);
     }
 
+    private FileInfo doScan(File file){
+        if (file == null || !file.exists()){
+            return null;
+        }
 
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setName(file.getName());
+        fileInfo.setPath(file.getAbsolutePath());
+
+        if (file.isFile()){
+            fileInfo.setFolder(false);
+            return fileInfo;
+        } else if (file.isDirectory()) {
+            fileInfo.setFolder(true);
+            File[] files = file.listFiles();
+            if (files == null || files.length == 0){
+                return fileInfo;
+            }
+
+            List<FileInfo> list = new ArrayList<>();
+            for (int i = 0; i < files.length; i++){
+                FileInfo info = doScan(files[i]);
+                if (info != null){
+                    list.add(info);
+                }
+            }
+            fileInfo.setFileList(list);
+            return fileInfo;
+        }
+
+        return null;
+    }
 }

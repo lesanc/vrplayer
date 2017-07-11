@@ -2,11 +2,11 @@ package name.lixianke.demo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 
-import java.io.File;
+import java.util.List;
 
+import name.lixianke.vrplayer.FileInfo;
 import name.lixianke.vrplayer.FileManager;
 import name.lixianke.vrplayer.ScanFileCallback;
 
@@ -20,8 +20,11 @@ public class MainActivity extends Activity {
         FileManager fm = FileManager.getInstance();
         fm.setCallback(new ScanFileCallback() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(List<FileInfo> fileList) {
                 Log.d(TAG, "onCreate: FileManager scanAll onSuccess");
+                for (FileInfo file : fileList) {
+                    Log.d(TAG, file.toString());
+                }
             }
 
             @Override
