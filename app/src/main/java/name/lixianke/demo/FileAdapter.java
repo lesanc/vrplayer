@@ -1,24 +1,28 @@
 package name.lixianke.demo;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
 import name.lixianke.vrplayer.FileInfo;
+import name.lixianke.vrplayer.R;
 
 /**
  * Created by xiankeli on 2017/7/11.
  */
 
 public class FileAdapter extends BaseAdapter {
-    private Context mContext;
+    private Activity mContext;
     private List<FileInfo> mFileList;
 
-    public FileAdapter(Context context, List<FileInfo> fileList) {
+    public FileAdapter(Activity context, List<FileInfo> fileList) {
         this.mContext = context;
         this.mFileList = fileList;
     }
@@ -40,17 +44,20 @@ public class FileAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        TextView tv = null;
+        LinearLayout layout = null;
+
+
 
         if (view != null){
-            tv = (TextView)view;
+            layout = (LinearLayout)view;
         } else {
-            tv = new TextView(mContext);
+            LayoutInflater inflater = mContext.getLayoutInflater();
+            layout = (LinearLayout)inflater.inflate(R.layout.layout_list_item, null);
         }
 
-        tv.setHeight(100);
+        TextView tv = (TextView)layout.findViewById(R.id.file_name);
         tv.setText(mFileList.get(i).getName());
 
-        return tv;
+        return layout;
     }
 }

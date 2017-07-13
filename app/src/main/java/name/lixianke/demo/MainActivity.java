@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void run() {
                         showList(fileList);
+                        findViewById(R.id.loading).setVisibility(View.GONE);
                     }
                 });
             }
